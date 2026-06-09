@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f4f6f8" />
+    <title>间隙 · 工作聊天</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell" id="appShell">
+      <aside class="rail">
+        <button class="brand" aria-label="间隙首页">
+          <span>隙</span>
+        </button>
+
+        <nav class="rail-nav" aria-label="主导航">
+          <button class="rail-button active" data-view="chat" aria-label="消息">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20 15a3 3 0 0 1-3 3H8l-4 3V6a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v9Z" />
+              <path d="M8 9h8M8 13h5" />
+            </svg>
+            <span class="nav-dot"></span>
+          </button>
+          <button class="rail-button" data-view="contacts" aria-label="联系人">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          </button>
+          <button class="rail-button" data-view="files" aria-label="文件">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" />
+              <path d="M14 2v6h6M8 13h8M8 17h6" />
+            </svg>
+          </button>
+        </nav>
+
+        <div class="rail-bottom">
+          <button class="rail-button" id="focusButton" aria-label="专注模式">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 7v5l3 2" />
+            </svg>
+          </button>
+          <div class="avatar avatar-me">林<span class="status online"></span></div>
+        </div>
+      </aside>
+
+      <aside class="sidebar">
+        <header class="sidebar-header">
+          <div>
+            <p class="eyebrow">WORKSPACE</p>
+            <h1>工作间隙</h1>
+          </div>
+          <button class="icon-button" id="newChatButton" aria-label="新建会话">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+          </button>
+        </header>
+
+        <label class="search-box">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.5-3.5" />
+          </svg>
+          <input id="searchInput" type="search" placeholder="搜索消息或同事" />
+          <kbd>⌘ K</kbd>
+        </label>
+
+        <div class="filter-tabs">
+          <button class="filter active" data-filter="all">全部 <span>6</span></button>
+          <button class="filter" data-filter="unread">未读 <span>3</span></button>
+          <button class="filter" data-filter="starred">标记</button>
+        </div>
+
+        <div class="conversation-list" id="conversationList">
+          <button class="conversation active" data-name="产品摸鱼组" data-unread="true">
+            <div class="avatar avatar-gradient">摸</div>
+            <div class="conversation-main">
+              <div class="conversation-top">
+                <strong>产品摸鱼组</strong>
+                <time>10:42</time>
+              </div>
+              <div class="conversation-bottom">
+                <p><span class="sender">阿哲：</span>午饭还是老地方？</p>
+                <span class="badge">3</span>
+              </div>
+            </div>
+          </button>
+
+          <button class="conversation" data-name="周然" data-unread="true">
+            <div class="avatar avatar-coral">周</div>
+            <div class="conversation-main">
+              <div class="conversation-top">
+                <strong>周然</strong>
+                <time>10:18</time>
+              </div>
+              <div class="conversation-bottom">
+                <p>那个表我帮你补完了</p>
+                <span class="badge">1</span>
+              </div>
+            </div>
+          </button>
+
+          <button class="conversation" data-name="设计协作" data-starred="true">
+            <div class="avatar avatar-violet">设</div>
+            <div class="conversation-main">
+              <div class="conversation-top">
+                <strong>设计协作</strong>
+                <time>昨天</time>
+              </div>
+              <div class="conversation-bottom">
+                <p><span class="sender">你：</span>首页新版已更新</p>
+                <svg class="muted-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m20 6-11 11-5-5" />
+                </svg>
+              </div>
+            </div>
+          </button>
+
+          <button class="conversation" data-name="陈一凡">
+            <div class="avatar avatar-blue">陈</div>
+            <div class="conversation-main">
+              <div class="conversation-top">
+                <strong>陈一凡</strong>
+                <time>昨天</time>
+              </div>
+              <div class="conversation-bottom">
+                <p>收到，明天再对一下</p>
+              </div>
+            </div>
+          </button>
+
+          <button class="conversation" data-name="羽毛球搭子" data-unread="true">
+            <div class="avatar avatar-green">羽</div>
+            <div class="conversation-main">
+              <div class="conversation-top">
+                <strong>羽毛球搭子</strong>
+                <time>周一</time>
+              </div>
+              <div class="conversation-bottom">
+                <p><span class="sender">小雨：</span>周四还有两个位</p>
+                <span class="badge">5</span>
+              </div>
+            </div>
+          </button>
+
+          <button class="conversation" data-name="项目 Alpha">
+            <div class="avatar avatar-slate">A</div>
+            <div class="conversation-main">
+              <div class="conversation-top">
+                <strong>项目 Alpha</strong>
+                <time>周一</time>
+              </div>
+              <div class="conversation-bottom">
+                <p>会议纪要已同步</p>
+              </div>
+            </div>
+          </button>
+        </div>
+
+        <div class="quiet-card">
+          <div class="quiet-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" />
+            </svg>
+          </div>
+          <div>
+            <strong>安静通知已开启</strong>
+            <p>仅显示重要消息</p>
+          </div>
+          <button id="quietToggle" class="switch active" aria-label="切换安静通知"><span></span></button>
+        </div>
+      </aside>
+
+      <main class="chat-panel">
+        <header class="chat-header">
+          <div class="chat-title">
+            <button class="mobile-back" aria-label="返回">
+              <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6" /></svg>
+            </button>
+            <div class="avatar-stack">
+              <div class="avatar avatar-gradient">摸</div>
+              <span class="status online"></span>
+            </div>
+            <div>
+              <div class="title-row">
+                <h2 id="chatName">产品摸鱼组</h2>
+                <span class="pill">6 人</span>
+              </div>
+              <p><span class="online-text">4 人在线</span> · 今日宜准时下班</p>
+            </div>
+          </div>
+          <div class="chat-actions">
+            <button class="icon-button" aria-label="语音通话">
+              <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.62 2.63a2 2 0 0 1-.45 2.11L8 9.73a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.85.3 1.73.5 2.63.62A2 2 0 0 1 22 16.92Z" /></svg>
+            </button>
+            <button class="icon-button" id="detailToggle" aria-label="会话详情">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 11v5M12 8h.01" /></svg>
+            </button>
+            <button class="work-button" id="workModeButton">
+              <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M8 2v4M16 2v4M3 10h18" /></svg>
+              工作模式
+            </button>
+          </div>
+        </header>
+
+        <section class="messages" id="messageArea" aria-live="polite">
+          <div class="date-divider"><span>今天</span></div>
+
+          <article class="message-row">
+            <div class="avatar avatar-coral small">哲</div>
+            <div class="message-content">
+              <div class="message-meta"><strong>阿哲</strong><time>10:31</time></div>
+              <div class="bubble">这会是不是又要开到十二点？</div>
+            </div>
+          </article>
+
+          <article class="message-row">
+            <div class="avatar avatar-blue small">雨</div>
+            <div class="message-content">
+              <div class="message-meta"><strong>小雨</strong><time>10:32</time></div>
+              <div class="bubble">我已经开始研究附近哪家出餐快了</div>
+              <div class="reaction">😂 <span>2</span></div>
+            </div>
+          </article>
+
+          <article class="message-row mine">
+            <div class="message-content">
+              <div class="message-meta"><time>10:35</time></div>
+              <div class="bubble">先把需求结论定了，争取 11:30 撤</div>
+            </div>
+          </article>
+
+          <article class="message-row">
+            <div class="avatar avatar-violet small">安</div>
+            <div class="message-content">
+              <div class="message-meta"><strong>安可</strong><time>10:37</time></div>
+              <div class="bubble">支持。我把刚才讨论的三点整理了一下：</div>
+              <div class="note-card">
+                <div class="note-header">
+                  <div class="file-mark">DOC</div>
+                  <div>
+                    <strong>需求讨论速记</strong>
+                    <p>在线文档 · 刚刚更新</p>
+                  </div>
+                  <button aria-label="更多"><span></span><span></span><span></span></button>
+                </div>
+                <ul>
+                  <li><span>01</span>首页信息密度降低</li>
+                  <li><span>02</span>周五前完成内部走查</li>
+                  <li><span>03</span>数据口径找老陈确认</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <article class="message-row">
+            <div class="avatar avatar-coral small">哲</div>
+            <div class="message-content">
+              <div class="message-meta"><strong>阿哲</strong><time>10:42</time></div>
+              <div class="bubble">午饭还是老地方？今天想吃点有锅气的。</div>
+            </div>
+          </article>
+
+          <div class="typing" id="typingIndicator">
+            <div class="avatar avatar-green tiny">夏</div>
+            <div><span></span><span></span><span></span></div>
+            <p>夏宁正在输入</p>
+          </div>
+        </section>
+
+        <footer class="composer-wrap">
+          <div class="quick-replies">
+            <button>老地方 +1</button>
+            <button>我晚点到</button>
+            <button>先帮我占个座</button>
+          </div>
+          <div class="composer">
+            <div class="composer-tools">
+              <button aria-label="添加附件">
+                <svg viewBox="0 0 24 24"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" /></svg>
+              </button>
+              <button aria-label="表情">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01" /></svg>
+              </button>
+            </div>
+            <textarea id="messageInput" rows="1" placeholder="输入消息，Enter 发送，Shift + Enter 换行"></textarea>
+            <div class="composer-right">
+              <span class="shortcut">Enter ↵</span>
+              <button class="send-button" id="sendButton" aria-label="发送消息">
+                <svg viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z" /><path d="M22 2 11 13" /></svg>
+              </button>
+            </div>
+          </div>
+        </footer>
+      </main>
+
+      <aside class="detail-panel" id="detailPanel">
+        <header class="detail-header">
+          <h3>会话详情</h3>
+          <button class="icon-button" id="closeDetail" aria-label="关闭详情">
+            <svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12" /></svg>
+          </button>
+        </header>
+
+        <section class="people-block">
+          <div class="people-title">
+            <span>群成员</span>
+            <button>查看全部</button>
+          </div>
+          <div class="people-list">
+            <div><div class="avatar avatar-coral">哲</div><span>阿哲</span></div>
+            <div><div class="avatar avatar-blue">雨</div><span>小雨</span></div>
+            <div><div class="avatar avatar-violet">安</div><span>安可</span></div>
+            <div><div class="avatar avatar-green">夏</div><span>夏宁</span></div>
+            <div><div class="avatar add-person">+</div><span>邀请</span></div>
+          </div>
+        </section>
+
+        <section class="detail-section">
+          <div class="section-heading">
+            <h4>今日待办</h4>
+            <span>2 / 4</span>
+          </div>
+          <div class="progress"><span></span></div>
+          <label class="task done">
+            <input type="checkbox" checked />
+            <span class="checkmark"></span>
+            <span>确认首页信息架构</span>
+          </label>
+          <label class="task done">
+            <input type="checkbox" checked />
+            <span class="checkmark"></span>
+            <span>同步数据指标口径</span>
+          </label>
+          <label class="task">
+            <input type="checkbox" />
+            <span class="checkmark"></span>
+            <span>补充空状态说明</span>
+          </label>
+          <label class="task">
+            <input type="checkbox" />
+            <span class="checkmark"></span>
+            <span>预订午餐座位</span>
+          </label>
+          <button class="add-task">+ 添加待办</button>
+        </section>
+
+        <section class="detail-section">
+          <div class="section-heading">
+            <h4>共享文件</h4>
+            <button>全部</button>
+          </div>
+          <div class="file-row">
+            <div class="file-icon figma">Fi</div>
+            <div><strong>首页探索稿.fig</strong><p>安可 · 8.4 MB</p></div>
+            <button>•••</button>
+          </div>
+          <div class="file-row">
+            <div class="file-icon sheet">X</div>
+            <div><strong>数据口径表.xlsx</strong><p>林默 · 126 KB</p></div>
+            <button>•••</button>
+          </div>
+        </section>
+
+        <div class="clock-card">
+          <p>距离下班还有</p>
+          <strong id="countdown">06:18:42</strong>
+          <div><span></span>今天也辛苦了</div>
+        </div>
+      </aside>
+
+      <section class="work-dashboard" id="workDashboard" aria-hidden="true">
+        <header>
+          <div>
+            <p>项目管理 / 产品体验优化</p>
+            <h2>Q3 迭代进度看板</h2>
+          </div>
+          <div class="dashboard-actions">
+            <span>最后同步：刚刚</span>
+            <button id="exitWorkMode">返回沟通</button>
+          </div>
+        </header>
+        <div class="metrics">
+          <article><p>本周完成</p><strong>18</strong><span class="up">↑ 12%</span></article>
+          <article><p>进行中</p><strong>7</strong><span>3 项今日到期</span></article>
+          <article><p>待评审</p><strong>4</strong><span>需关注</span></article>
+          <article><p>整体进度</p><strong>68%</strong><span class="up">状态正常</span></article>
+        </div>
+        <div class="dashboard-grid">
+          <article class="chart-card">
+            <div class="chart-heading"><div><h3>迭代燃尽趋势</h3><p>过去 14 天任务完成情况</p></div><span>实际进度</span></div>
+            <div class="fake-chart">
+              <div class="chart-labels"><span>40</span><span>30</span><span>20</span><span>10</span><span>0</span></div>
+              <svg viewBox="0 0 720 250" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#4263eb" stop-opacity=".22" />
+                    <stop offset="100%" stop-color="#4263eb" stop-opacity="0" />
+                  </linearGradient>
+                </defs>
+                <path class="grid-line" d="M0 20H720M0 75H720M0 130H720M0 185H720M0 240H720" />
+                <path class="area" d="M0 30 C90 44 100 54 150 66 S245 90 300 105 S390 130 450 144 S550 185 610 198 S675 220 720 230 V250 H0Z" />
+                <path class="line" d="M0 30 C90 44 100 54 150 66 S245 90 300 105 S390 130 450 144 S550 185 610 198 S675 220 720 230" />
+              </svg>
+              <div class="chart-dates"><span>05/26</span><span>05/29</span><span>06/01</span><span>06/04</span><span>06/08</span></div>
+            </div>
+          </article>
+          <article class="activity-card">
+            <div class="chart-heading"><div><h3>最近动态</h3><p>团队项目更新</p></div><button>筛选</button></div>
+            <div class="activity"><div class="avatar avatar-violet small">安</div><div><strong>安可</strong> 更新了首页探索稿<p>10 分钟前</p></div></div>
+            <div class="activity"><div class="avatar avatar-blue small">雨</div><div><strong>小雨</strong> 完成了数据埋点梳理<p>32 分钟前</p></div></div>
+            <div class="activity"><div class="avatar avatar-coral small">哲</div><div><strong>阿哲</strong> 创建了 3 个新任务<p>1 小时前</p></div></div>
+            <div class="activity"><div class="avatar avatar-me small">林</div><div><strong>你</strong> 更新了需求讨论速记<p>2 小时前</p></div></div>
+          </article>
+        </div>
+      </section>
+    </div>
+
+    <div class="toast" id="toast">已切换到工作模式</div>
+    <script src="app.js"></script>
+  </body>
+</html>
