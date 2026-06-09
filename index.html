@@ -14,6 +14,25 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <section class="join-overlay" id="joinOverlay">
+      <form class="join-card" id="joinForm">
+        <div class="join-logo">隙</div>
+        <p class="eyebrow">REALTIME WORKSPACE</p>
+        <h2>进入聊天房间</h2>
+        <p class="join-copy">和朋友输入相同的房间号，就能实时看到彼此的消息。</p>
+        <label>
+          <span>你的昵称</span>
+          <input id="nicknameInput" maxlength="40" placeholder="例如：林默" required />
+        </label>
+        <label>
+          <span>房间号</span>
+          <input id="roomInput" maxlength="64" placeholder="例如：lunch-2026" required />
+        </label>
+        <button type="submit">进入房间</button>
+        <small>请勿发送密码、公司机密或其他敏感信息</small>
+      </form>
+    </section>
+
     <div class="app-shell" id="appShell">
       <aside class="rail">
         <button class="brand" aria-label="间隙首页">
@@ -194,10 +213,10 @@
             </div>
             <div>
               <div class="title-row">
-                <h2 id="chatName">产品摸鱼组</h2>
+                <h2 id="chatName">实时聊天室</h2>
                 <span class="pill">6 人</span>
               </div>
-              <p><span class="online-text">4 人在线</span> · 今日宜准时下班</p>
+              <p><span class="online-text" id="connectionStatus">正在连接</span> · 房间 <span id="roomLabel">--</span></p>
             </div>
           </div>
           <div class="chat-actions">
@@ -428,6 +447,7 @@
     </div>
 
     <div class="toast" id="toast">已切换到工作模式</div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="app.js"></script>
   </body>
 </html>
