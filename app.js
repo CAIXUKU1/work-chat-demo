@@ -9,8 +9,24 @@ const detailPanel = document.querySelector("#detailPanel");
 const toast = document.querySelector("#toast");
 const typingIndicator = document.querySelector("#typingIndicator");
 const workDashboard = document.querySelector("#workDashboard");
+const joinOverlay = document.querySelector("#joinOverlay");
+const joinForm = document.querySelector("#joinForm");
+const nicknameInput = document.querySelector("#nicknameInput");
+const roomInput = document.querySelector("#roomInput");
+const roomLabel = document.querySelector("#roomLabel");
+const connectionStatus = document.querySelector("#connectionStatus");
+
+const SUPABASE_URL = "https://dmvhvpfofhffnarsxawo.supabase.co";
+const SUPABASE_KEY = "sb_publishable_bPysTv46R2Xh_u83z8rUMA_tEB_cYO2";
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let toastTimer;
+let activeRoom = "";
+let nickname = "";
+let messageChannel;
+let sending = false;
+const clientId = localStorage.getItem("workChatClientId") || crypto.randomUUID();
+localStorage.setItem("workChatClientId", clientId);
 
 function showToast(message) {
   toast.textContent = message;
@@ -27,27 +43,70 @@ function formatTime() {
   }).format(new Date());
 }
 
-function sendMessage(text = messageInput.value) {
-  const cleanText = text.trim();
-  if (!cleanText) return;
+function renderRealtimeMessage(message) {
+  if (document.querySelector(`[data-message-id="${message.id}"]`)) return;
 
+  document.querySelector(".empty-room")?.remove();
+  const isMine = message.client_id === clientId;
   const article = document.createElement("article");
-  article.className = "message-row mine";
-  article.innerHTML = `
-    <div class="message-content">
-      <div class="message-meta"><time>${formatTime()}</time></div>
-      <div class="bubble"></div>
-    </div>
-  `;
-  article.querySelector(".bubble").textContent = cleanText;
-  messageArea.insertBefore(article, typingIndicator);
+  article.className = `message-row${isMine ? " mine" : ""}`;
+  article.dataset.messageId = message.id;
+
+  if (!isMine) {
+    const avatar = document.createElement("div");
+    avatar.className = "avatar avatar-blue small";
+    avatar.textContent = message.sender.slice(0, 1);
+    article.appendChild(avatar);
+  }
+
+  const content = document.createElement("div");
+  content.className = "message-content";
+  const meta = document.createElement("div");
+  meta.className = "message-meta";
+  if (!isMine) {
+    const sender = document.createElement("strong");
+    sender.textContent = message.sender;
+    meta.appendChild(sender);
+  }
+  const time = document.createElement("time");
+  time.textContent = new Intl.DateTimeFormat("zh-CN", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(new Date(message.created_at));
+  meta.appendChild(time);
+
+  const bubble = document.createElement("div");
+  bubble.className = "bubble";
+  bubble.textContent = message.content;
+  content.append(meta, bubble);
+  article.appendChild(content);
+  messageArea.appendChild(article);
+  messageArea.scrollTo({ top: messageArea.scrollHeight, behavior: "smooth" });
+}
+
+async function sendMessage(text = messageInput.value) {
+  const cleanText = text.trim();
+  if (!cleanText || !activeRoom || sending) return;
+
+  sending = true;
+  sendButton.disabled = true;
+  const { error } = await db.from("messages").insert({
+    room: activeRoom,
+    sender: nickname,
+    content: cleanText,
+    client_id: clientId,
+  });
+  sending = false;
+  sendButton.disabled = false;
+
+  if (error) {
+    showToast("发送失败，请检查网络后重试");
+    return;
+  }
+
   messageInput.value = "";
   messageInput.style.height = "auto";
-  messageArea.scrollTo({ top: messageArea.scrollHeight, behavior: "smooth" });
-
-  window.setTimeout(() => {
-    typingIndicator.querySelector("p").textContent = "阿哲正在输入";
-  }, 450);
 }
 
 sendButton.addEventListener("click", () => sendMessage());
@@ -67,6 +126,76 @@ messageInput.addEventListener("input", () => {
 document.querySelectorAll(".quick-replies button").forEach((button) => {
   button.addEventListener("click", () => sendMessage(button.textContent));
 });
+
+async function enterRoom(room, name) {
+  activeRoom = room.trim().toLowerCase();
+  nickname = name.trim();
+  localStorage.setItem("workChatRoom", activeRoom);
+  localStorage.setItem("workChatNickname", nickname);
+  roomLabel.textContent = activeRoom;
+  chatName.textContent = "实时聊天室";
+  connectionStatus.textContent = "正在连接";
+
+  messageArea.querySelectorAll(".message-row, .typing").forEach((item) => item.remove());
+  if (!messageArea.querySelector(".empty-room")) {
+    const empty = document.createElement("div");
+    empty.className = "empty-room";
+    empty.textContent = "这里还没有消息，先打个招呼吧";
+    messageArea.appendChild(empty);
+  }
+
+  const { data, error } = await db
+    .from("messages")
+    .select("*")
+    .eq("room", activeRoom)
+    .order("created_at", { ascending: true })
+    .limit(100);
+
+  if (error) {
+    connectionStatus.textContent = "连接失败";
+    showToast("无法连接聊天室");
+    return;
+  }
+
+  data.forEach(renderRealtimeMessage);
+  if (messageChannel) await db.removeChannel(messageChannel);
+
+  messageChannel = db
+    .channel(`room:${activeRoom}`)
+    .on(
+      "postgres_changes",
+      { event: "INSERT", schema: "public", table: "messages", filter: `room=eq.${activeRoom}` },
+      (payload) => renderRealtimeMessage(payload.new),
+    )
+    .subscribe((status) => {
+      if (status === "SUBSCRIBED") {
+        connectionStatus.textContent = "实时在线";
+      } else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+        connectionStatus.textContent = "连接不稳定";
+      }
+    });
+
+  joinOverlay.classList.add("closed");
+  location.hash = encodeURIComponent(activeRoom);
+  messageInput.focus();
+}
+
+joinForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  enterRoom(roomInput.value, nicknameInput.value);
+});
+
+const storedName = localStorage.getItem("workChatNickname") || "";
+const storedRoom =
+  decodeURIComponent(location.hash.slice(1))
+  || localStorage.getItem("workChatRoom")
+  || "";
+nicknameInput.value = storedName;
+roomInput.value = storedRoom;
+
+if (storedName && storedRoom) {
+  enterRoom(storedRoom, storedName);
+}
 
 conversationList.addEventListener("click", (event) => {
   const conversation = event.target.closest(".conversation");
@@ -186,7 +315,3 @@ function updateCountdown() {
 
 updateCountdown();
 setInterval(updateCountdown, 1000);
-
-window.setTimeout(() => {
-  typingIndicator.style.display = "none";
-}, 5000);
