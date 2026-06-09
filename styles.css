@@ -30,6 +30,115 @@ body {
     var(--bg);
 }
 
+.join-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(238, 241, 246, 0.88);
+  backdrop-filter: blur(12px);
+  transition: 0.25s ease;
+}
+
+.join-overlay.closed {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.join-card {
+  width: min(390px, 100%);
+  padding: 34px;
+  background: white;
+  border: 1px solid rgba(226, 230, 235, 0.95);
+  border-radius: 22px;
+  box-shadow: 0 24px 70px rgba(31, 41, 55, 0.14);
+}
+
+.join-logo {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 22px;
+  color: white;
+  background: var(--blue);
+  border-radius: 13px;
+  font-weight: 700;
+}
+
+.join-card h2 {
+  margin: 0;
+  font-size: 24px;
+  letter-spacing: -0.04em;
+}
+
+.join-copy {
+  margin: 10px 0 24px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.join-card label {
+  display: block;
+  margin: 14px 0;
+}
+
+.join-card label span {
+  display: block;
+  margin-bottom: 7px;
+  color: #586372;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.join-card input {
+  width: 100%;
+  height: 43px;
+  padding: 0 13px;
+  color: var(--ink);
+  background: #f8f9fb;
+  border: 1px solid #e2e6eb;
+  border-radius: 10px;
+  outline: 0;
+}
+
+.join-card input:focus {
+  background: white;
+  border-color: #aebcf2;
+  box-shadow: 0 0 0 3px rgba(66, 99, 235, 0.08);
+}
+
+.join-card > button {
+  width: 100%;
+  height: 43px;
+  margin-top: 8px;
+  color: white;
+  background: var(--blue);
+  border: 0;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.join-card small {
+  display: block;
+  margin-top: 14px;
+  color: #9aa2ad;
+  text-align: center;
+  font-size: 9px;
+}
+
+.empty-room {
+  margin: 70px auto;
+  color: #9aa2ad;
+  text-align: center;
+  font-size: 11px;
+}
+
 button,
 input,
 textarea {
