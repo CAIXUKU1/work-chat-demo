@@ -17,7 +17,7 @@ const roomLabel = document.querySelector("#roomLabel");
 const connectionStatus = document.querySelector("#connectionStatus");
 
 const SUPABASE_URL = "https://dmvhvpfofhffnarsxawo.supabase.co";
-const SUPABASE_KEY = "sb_publishable_bPysTv46R2Xh_u83z8rUMA_tEB_cYO2";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRtdmh2cGZvZmhmZm5hcnN4YXdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5OTM5ODcsImV4cCI6MjA5NjU2OTk4N30.vuA2g9CnzYcJBIoQFGMjqInOn3n29zd9wa6plt_azIg";
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let toastTimer;
